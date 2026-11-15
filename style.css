@@ -35,3 +35,12 @@ input,textarea{width:100%;color:inherit;background:#f7f8f4;border:1px solid #cbd
 textarea{resize:vertical}
 .message{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 12px}
 footer.wrap{padding-top:28px;padding-bottom:25px;color:#4b6159;font-size:.85rem}
+
+.forum-rules summary{display:list-item;width:fit-content;cursor:pointer;background:#fff;color:#132724;border:1px solid #cbd6cb;border-radius:8px;padding:8px 13px;font-weight:650}
+.forum-rules summary:focus-visible{outline:2px solid #146457;outline-offset:3px}
+.forum-rules ol{list-style:decimal;padding-left:1.5rem;margin-top:12px}
+.forum-rules li{margin-bottom:6px}
+
+.top-ad{margin-top:16px}
+.ad-banner{display:grid;place-items:center;min-height:clamp(64px,12vw,100px);padding:12px;background:#eeefe8;border:1px dashed #aebcb0;border-radius:12px;color:#4b6159;font-size:.85rem;text-align:center}
+#threads .ad-row{display:block;padding:0;background:none;border:0}

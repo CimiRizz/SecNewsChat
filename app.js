@@ -48,7 +48,7 @@ async function listThreads(sequence) {
     if(info.status === 'error') return name+' · haku epäonnistui'+(last ? ', edellinen lista '+last : '');
     return name+' · '+last+(info.status === 'partial' ? ' (osa jutuista jäi varmistamatta)' : '');
   }).join(' | ');
-  for(const item of visible) {
+  for(const [index, item] of visible.entries()) {
     const li = element('li');
     li.value = item.position;
     const rank = element('span',String(item.position),'rank');
@@ -63,6 +63,15 @@ async function listThreads(sequence) {
       heading,element('span',status+' · '+item.replies+' viestiä'+(item.locked?' · Lukittu':''),'meta'));
     li.append(rank,section);
     $('threads').append(li);
+    if((index + 1) % 5 === 0) {
+      const slot = element('li', '', 'ad-row');
+      slot.setAttribute('role', 'presentation');
+      const banner = element('aside', 'Mainospaikka', 'ad-banner');
+      banner.dataset.adSlot = 'after-' + (index + 1);
+      banner.setAttribute('aria-label', 'Mainosbannerin paikka');
+      slot.append(banner);
+      $('threads').append(slot);
+    }
   }
 }
 
