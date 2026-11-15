@@ -44,22 +44,6 @@ function meta(item) {
   return element('p', sourceNames[item.source]+' · '+formatDate.format(item.published*1000), 'meta');
 }
 
-function positionOriginalLink() {
-  const article = $('article');
-  const original = article.querySelector('.article-original');
-  if (!original || !article.clientWidth) return;
-
-  const titleRow = article.querySelector('.article-title');
-  const heading = titleRow.querySelector('h1');
-  const titleText = document.createRange();
-  titleText.selectNodeContents(heading);
-  const gap = parseFloat(getComputedStyle(titleRow).columnGap);
-  const fits = titleText.getClientRects().length === 1 &&
-    titleText.getBoundingClientRect().width + gap + original.getBoundingClientRect().width <= titleRow.clientWidth;
-  const row = fits ? titleRow : article.querySelector('.article-meta');
-  if (original.parentElement !== row) row.append(original);
-}
-
 async function listThreads(sequence) {
   const {threads, sources} = await api('/api/threads');
   if(sequence !== routeSequence) return;
@@ -109,16 +93,10 @@ async function showThread(id, sequence) {
   const item = await api('/api/threads/'+id);
   if(sequence !== routeSequence) return;
   activeThread = item.id;
-  const original = element('a','Avaa alkuperäinen uutinen ↗','article-original');
+  const original = $('article-original');
   original.href = item.url;
-  original.target = '_blank';
-  original.rel = 'noopener noreferrer';
-  const articleMeta = element('div', '', 'article-meta');
-  articleMeta.append(meta(item),original);
-  const articleTitle = element('div', '', 'article-title');
-  articleTitle.append(element('h1',item.title));
-  $('article').replaceChildren(articleMeta,articleTitle);
-  positionOriginalLink();
+  original.hidden = false;
+  $('article').replaceChildren(meta(item),element('h1',item.title));
   $('messages').replaceChildren();
   $('reply').hidden = Boolean(item.locked);
   $('thread-status').textContent = item.locked ? 'Ketju on lukittu.' : '';
@@ -156,6 +134,7 @@ async function route() {
   activeThread = undefined;
   if(match) {
     $('reply').reset();
+    $('article-original').hidden = true;
     $('article').replaceChildren();
     $('messages').replaceChildren();
     $('reply').hidden = true;
@@ -254,7 +233,6 @@ loadBanner($('top-banner'));
 mobileBanner.addEventListener('change', () => {
   document.querySelectorAll('[data-ad-slot]').forEach(loadBanner);
 });
-new ResizeObserver(positionOriginalLink).observe($('article'));
 window.addEventListener('hashchange',route);
 route();
 setInterval(() => { if(!location.hash) route(); },30000);

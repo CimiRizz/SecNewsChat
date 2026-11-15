@@ -26,15 +26,12 @@ button:disabled{opacity:.6;cursor:wait}
 .meta{color:#4b6159;font-size:.85rem}
 .source{font-weight:800;color:#146457}
 .back{display:inline-block;margin-bottom:16px}
-.thread-link{text-align:right}
+.thread-actions{display:flex;align-items:stretch;justify-content:space-between;gap:8px;margin-bottom:16px}
+.thread-actions .back{flex:none;margin:0}
+.thread-actions .article-original{min-width:0;margin-left:auto;overflow-wrap:anywhere}
 #article{margin-bottom:24px}
-.article-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
-.article-meta .meta{margin:0}
-.article-title{position:relative;column-gap:12px;margin:6px 0 12px}
-.article-title:has(.article-original){display:grid;align-items:center;min-height:44px}
+#article .meta{margin:0 0 6px}
 #article h1{font-size:clamp(1.65rem,4vw,2.55rem);margin:0;overflow-wrap:anywhere}
-.article-original{flex:none;width:max-content;max-width:100%;margin-left:auto;text-align:right;font-size:.85rem;overflow-wrap:anywhere}
-.article-title .article-original{position:absolute;right:0;top:50%;transform:translateY(-50%)}
 #thread :is(.back,.article-original){display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 13px;border:1px solid #cbd6cb;border-radius:8px;background:#fff;color:#146457;font-size:.85rem;font-weight:650;text-align:center;text-decoration:none}
 #thread :is(.back,.article-original):hover{background:#e7f1ec;border-color:#146457}
 #thread :is(.back,.article-original):focus-visible{outline:2px solid #146457;outline-offset:3px}
