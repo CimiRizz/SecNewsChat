@@ -1,7 +1,7 @@
 const $ = id => document.getElementById(id);
 const sourceNames = {IS:'Ilta-Sanomat', IL:'Iltalehti'};
 const formatDate = new Intl.DateTimeFormat('fi-FI',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Helsinki'});
-let source = '';
+const selectedSources = new Set(Object.keys(sourceNames));
 let adminToken = '';
 let routeSequence = 0;
 let activeThread;
@@ -65,7 +65,7 @@ async function listThreads(sequence) {
   if(sequence !== routeSequence) return;
   $('threads').replaceChildren();
   const visible = threads.map((item, index) => ({...item, position:index+1}))
-    .filter(item => !source || item.source === source);
+    .filter(item => selectedSources.has(item.source));
   $('status').hidden = Boolean(visible.length);
   $('status').textContent = Object.keys(sources).length
     ? 'Tässä näkymässä ei ole vahvistettuja uutisia.'
@@ -173,8 +173,14 @@ async function route() {
 }
 for(const button of document.querySelectorAll('[data-source]')) {
   button.addEventListener('click',() => {
-    source = button.dataset.source;
-    document.querySelectorAll('[data-source]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    const source = button.dataset.source;
+    if (selectedSources.has(source)) {
+      if (selectedSources.size === 1) return;
+      selectedSources.delete(source);
+    } else {
+      selectedSources.add(source);
+    }
+    button.setAttribute('aria-pressed', String(selectedSources.has(source)));
     route();
   });
 }
