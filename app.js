@@ -97,7 +97,9 @@ async function showThread(id, sequence) {
   original.href = item.url;
   original.target = '_blank';
   original.rel = 'noopener noreferrer';
-  $('article').replaceChildren(meta(item),element('h1',item.title),original,element('p','Ketju '+item.id,'meta'));
+  const originalLink = element('div', '', 'thread-link');
+  originalLink.append(original);
+  $('article').replaceChildren(meta(item),element('h1',item.title),originalLink);
   $('messages').replaceChildren();
   $('reply').hidden = Boolean(item.locked);
   $('thread-status').textContent = item.locked ? 'Ketju on lukittu.' : '';
