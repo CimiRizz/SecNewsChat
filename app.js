@@ -13,6 +13,19 @@ function element(tag, label='', className='') {
   return node;
 }
 
+const mobileBanner = window.matchMedia('(max-width: 600px)');
+
+function loadBanner(banner) {
+  const folder = mobileBanner.matches ? 'mobiili' : 'tietokone';
+  const image = element('img');
+  image.alt = 'Mainos';
+  banner.textContent = 'Mainospaikka';
+  image.addEventListener('load', () => {
+    if (mobileBanner.matches === (folder === 'mobiili')) banner.replaceChildren(image);
+  }, {once:true});
+  image.src = '/' + folder + '/mainokset/' + banner.dataset.adSlot + '.webp';
+}
+
 async function api(path, data, token) {
   const headers = token ? {Authorization:'Bearer '+token} : {};
   const options = {headers};
@@ -71,6 +84,7 @@ async function listThreads(sequence) {
       banner.setAttribute('aria-label', 'Mainosbannerin paikka');
       slot.append(banner);
       $('threads').append(slot);
+      loadBanner(banner);
     }
   }
 }
@@ -205,6 +219,10 @@ $('lock').addEventListener('submit',async event => {
   }
 });
 
+loadBanner($('top-banner'));
+mobileBanner.addEventListener('change', () => {
+  document.querySelectorAll('[data-ad-slot]').forEach(loadBanner);
+});
 window.addEventListener('hashchange',route);
 route();
 setInterval(() => { if(!location.hash) route(); },30000);

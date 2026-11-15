@@ -136,6 +136,9 @@ def top_threads(db):
 
 ASSETS = {'/': ('index.html', 'text/html'), '/app.js': ('app.js', 'text/javascript'),
           '/style.css': ('style.css', 'text/css')}
+BANNER_PATHS = {f'/{device}/mainokset/{slot}.webp'
+                for device in ('tietokone', 'mobiili')
+                for slot in ('top', 'after-5', 'after-10')}
 write_lock = threading.Lock()
 recent_writes = {}
 
@@ -144,7 +147,7 @@ class Handler(BaseHTTPRequestHandler):
     def respond(self, status, payload, mime='application/json'):
         data = json.dumps(payload, ensure_ascii=False).encode() if mime == 'application/json' else payload
         self.send_response(status)
-        self.send_header('Content-Type', f'{mime}; charset=utf-8')
+        self.send_header('Content-Type', mime if mime.startswith('image/') else f'{mime}; charset=utf-8')
         self.send_header('Content-Length', str(len(data)))
         self.send_header('Cache-Control', 'no-store')
         self.send_header('X-Content-Type-Options', 'nosniff')
@@ -165,6 +168,12 @@ class Handler(BaseHTTPRequestHandler):
         if path in ASSETS:
             name, mime = ASSETS[path]
             return self.respond(200, (ROOT / name).read_bytes(), mime)
+        if path in BANNER_PATHS:
+            try:
+                data = (ROOT / path.lstrip('/')).read_bytes()
+            except FileNotFoundError:
+                return self.error(404, 'Mainosbanneria ei löytynyt.')
+            return self.respond(200, data, 'image/webp')
         if path == '/health':
             return self.respond(200, {'ok': True})
         with database() as db:

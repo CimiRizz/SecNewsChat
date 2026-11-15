@@ -6,6 +6,18 @@ Lehtien yhteisiä lukijamääriä ei ole käytettävissä. Yhdistetty lista jär
 
 IS:n sivudatasta tarkistetaan artikkelin tunniste, `commentingVisible` ja `commentingEnded`. IL:n sivudatasta tarkistetaan tunniste ja `commenting_enabled`. Myös päättyneet kommentointiketjut kelpaavat. IL:n kenttä kertoo nykyisen tilan. Jos yksittäisen jutun tilaa ei saada vahvistettua, juttu jää pois uudelta listalta. Jos koko lähteen haku epäonnistuu, viimeinen onnistunut lista näkyy päivitysaikoineen ja virheilmoituksella. Vanhat keskustelut säilyvät tietokannassa.
 
+## Mainosbannerit
+
+Laita WebP-kuvat kansioihin `tietokone/mainokset/` ja `mobiili/mainokset/`. Selain käyttää mobiilikansiota, kun näkymä on enintään 600 px leveä. Käytä molemmissa kansioissa samoja nimiä:
+
+- `top.webp` ylätunnisteen alle
+- `after-5.webp` viidennen näkyvän uutisen jälkeen
+- `after-10.webp` kymmenennen näkyvän uutisen jälkeen
+
+Kuva täyttää banneripaikan leveyden ja säilyttää kuvasuhteensa. Esimerkkikoot ovat tietokoneelle 810 × 100 px ja puhelimelle 350 × 64 px. Jos kyseiseen paikkaan ei ole kuvaa valitussa kansiossa, näkyy teksti **Mainospaikka**.
+
+Muille kuville on varattu kansiot `tietokone/kuvat/`, `mobiili/kuvat/` ja `yhteiset/kuvat/`. Näiden sisältö voidaan ottaa käyttöön, kun kuvat lisätään sivustolle.
+
 ## Käynnistys Windowsissa
 
 Python 3.10 tai uudempi. Avaa PowerShell projektin kansiossa.
