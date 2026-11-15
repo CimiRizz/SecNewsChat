@@ -131,6 +131,7 @@ async function route() {
   if(admin) return;
   activeThread = undefined;
   if(match) {
+    $('reply').reset();
     $('article').replaceChildren();
     $('messages').replaceChildren();
     $('reply').hidden = true;

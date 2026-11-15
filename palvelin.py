@@ -185,8 +185,8 @@ class Handler(BaseHTTPRequestHandler):
                                      (thread_id,)).fetchone()
                 if article:
                     rows = db.execute("""SELECT id,author,body,created FROM
-                        (SELECT id,author,body,created FROM messages WHERE article_id=? AND removed=0
-                         ORDER BY id DESC LIMIT 200) ORDER BY id""", (article['id'],))
+                        messages WHERE article_id=? AND removed=0
+                        ORDER BY id DESC LIMIT 200""", (article['id'],))
                     return self.respond(200, {**dict(article), 'messages': [dict(row) for row in rows]})
             if path == '/api/reports':
                 if not self.admin():
