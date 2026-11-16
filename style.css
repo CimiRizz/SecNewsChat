@@ -25,10 +25,10 @@ button,input,textarea{font:inherit}
 button{cursor:pointer;background:#fff;color:#132724;border:1px solid #cbd6cb;border-radius:8px;padding:8px 13px}
 button[aria-pressed=true],button.primary{background:#146457;border-color:#146457;color:white;font-weight:650}
 button:disabled{opacity:.6;cursor:wait}
-.filter button{display:inline-grid;place-items:center;width:124px;min-height:44px;padding:7px 11px;border:2px solid #cbd6cb;background:#fff;color:#132724}
-.filter button[aria-pressed=true]{border-color:#146457;background:#fff;box-shadow:inset 0 -3px #146457}
+.filter button{display:block;width:48px;height:48px;padding:0;border:0;border-radius:8px;background:transparent;line-height:0}
+.filter button[aria-pressed=true]{background:transparent}
 .filter button:focus-visible{outline:2px solid #146457;outline-offset:2px}
-.filter img{display:block;max-width:100%;height:auto;max-height:22px;object-fit:contain}
+.filter img{display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit}
 .filter button[aria-pressed=false] img{filter:grayscale(1);opacity:.65}
 
 #threads li,#messages li,#reports li,form{background:#fff;border:1px solid #e0e4db;border-radius:12px;padding:16px;margin-bottom:12px}
