@@ -137,8 +137,8 @@ def top_threads(db):
 ASSETS = {'/': ('index.html', 'text/html'), '/app.js': ('app.js', 'text/javascript'),
           '/style.css': ('style.css', 'text/css'),
           '/fonts/InterVariable.woff2': ('fonts/InterVariable.woff2', 'font/woff2'),
-          '/logos/ilta-sanomat.png': ('logos/ilta-sanomat.png', 'image/png'),
-          '/logos/iltalehti.png': ('logos/iltalehti.png', 'image/png')}
+          '/logos/logo-is.png': ('logos/logo-is.png', 'image/png'),
+          '/logos/logo-il.png': ('logos/logo-il.png', 'image/png')}
 BANNER_PATHS = {f'/{device}/mainokset/{slot}.webp'
                 for device in ('tietokone', 'mobiili')
                 for slot in ('top', 'after-5', 'after-10')}
