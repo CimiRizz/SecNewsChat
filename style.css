@@ -56,7 +56,8 @@ textarea{resize:vertical}
 .message{white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 12px}
 footer.wrap{padding-top:28px;padding-bottom:25px;color:#4b6159;font-size:.85rem}
 
-.forum-rules summary{
+.forum-rules summary,
+.forum-rules .moderation-link{
   display:list-item;
   width:fit-content;
   cursor:pointer;
@@ -68,14 +69,16 @@ footer.wrap{padding-top:28px;padding-bottom:25px;color:#4b6159;font-size:.85rem}
   padding:8px 13px;
   font-weight:650;
 }
-.forum-rules summary:active{
+.forum-rules summary:active,
+.forum-rules .moderation-link:active{
   transform:translateY(2px);
   box-shadow:0 1px 0 #58766b;
 }
-.forum-rules summary:focus-visible{outline:2px solid #146457;outline-offset:3px}
+.forum-rules summary:focus-visible,
+.forum-rules .moderation-link:focus-visible{outline:2px solid #146457;outline-offset:3px}
 .forum-rules ol{list-style:decimal;padding-left:1.5rem;margin-top:12px}
 .forum-rules li{margin-bottom:6px}
-.forum-rules .moderation-link{display:block;width:fit-content;margin:8px 0 0 auto}
+.forum-rules .moderation-link{display:block;margin:8px 0 0 auto;text-decoration:none}
 
 .top-ad{margin-top:16px}
 .ad-banner{display:grid;place-items:center;min-height:clamp(64px,12vw,100px);padding:12px;background:#eeefe8;border:1px dashed #aebcb0;border-radius:12px;color:#4b6159;font-size:.85rem;text-align:center}
