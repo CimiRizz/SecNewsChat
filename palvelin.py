@@ -135,7 +135,10 @@ def top_threads(db):
 
 
 ASSETS = {'/': ('index.html', 'text/html'), '/app.js': ('app.js', 'text/javascript'),
-          '/style.css': ('style.css', 'text/css')}
+          '/style.css': ('style.css', 'text/css'),
+          '/fonts/InterVariable.woff2': ('fonts/InterVariable.woff2', 'font/woff2'),
+          '/logos/ilta-sanomat.png': ('logos/ilta-sanomat.png', 'image/png'),
+          '/logos/iltalehti.png': ('logos/iltalehti.png', 'image/png')}
 BANNER_PATHS = {f'/{device}/mainokset/{slot}.webp'
                 for device in ('tietokone', 'mobiili')
                 for slot in ('top', 'after-5', 'after-10')}
@@ -147,7 +150,7 @@ class Handler(BaseHTTPRequestHandler):
     def respond(self, status, payload, mime='application/json'):
         data = json.dumps(payload, ensure_ascii=False).encode() if mime == 'application/json' else payload
         self.send_response(status)
-        self.send_header('Content-Type', mime if mime.startswith('image/') else f'{mime}; charset=utf-8')
+        self.send_header('Content-Type', mime if mime.startswith(('image/', 'font/')) else f'{mime}; charset=utf-8')
         self.send_header('Content-Length', str(len(data)))
         self.send_header('Cache-Control', 'no-store')
         self.send_header('X-Content-Type-Options', 'nosniff')
