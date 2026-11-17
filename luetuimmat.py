@@ -2,6 +2,7 @@
 import json
 import re
 from concurrent.futures import ThreadPoolExecutor
+from typing import NamedTuple
 from urllib.parse import urljoin
 
 from keraaja import article_link, download, inspect
@@ -12,6 +13,13 @@ PUBLISHER_LISTS = {
 }
 IL_LIST = re.compile(r'"mostRead"\s*:\s*\{\s*"c:,fe:coma-mostread,50"\s*:\s*\{\s*"items"\s*:\s*')
 CLOSED = ('disabled', 'ended')
+
+
+class RankedCheck(NamedTuple):
+    rank: int
+    item: tuple
+    status: str | None
+    retryable: bool
 
 
 def ranked_articles(source, raw):
@@ -45,12 +53,26 @@ def ranked_articles(source, raw):
             yield rank, (source, *link, ' '.join(title.split()), date or '')
 
 
+def check_articles(candidates):
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        checks = pool.map(inspect, (item for _, item in candidates))
+        return [RankedCheck(rank, item, status, retryable)
+                for (rank, item), (status, retryable) in zip(candidates, checks)]
+
+
 def check_ranked(source):
     _, body = download(PUBLISHER_LISTS[source])
     candidates = list(ranked_articles(source, body.decode('utf-8')))
     if not candidates:
         raise ValueError('Luetuimmat-lista oli tyhjä')
-    with ThreadPoolExecutor(max_workers=6) as pool:
-        checks = pool.map(inspect, (item for _, item in candidates))
-        results = [(rank, item, status) for (rank, _), (item, status) in zip(candidates, checks)]
-    return results
+    return check_articles(candidates)
+
+
+def retry_failed(results):
+    pending = [(result.rank, result.item) for result in results if result.retryable]
+    if not pending:
+        return None
+    recovered = {result.rank: result for result in check_articles(pending) if result.status is not None}
+    if recovered:
+        return [recovered.get(result.rank, result) for result in results]
+    return None

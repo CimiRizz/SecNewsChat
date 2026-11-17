@@ -1,6 +1,8 @@
 """Lue julkisten uutisjuttujen kommentointitila kustantajan sivudatasta."""
 import json
 import re
+from http.client import HTTPException
+from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
@@ -88,8 +90,12 @@ def inspect(item):
         final, raw = download(url)
         link = article_link(source, final)
         if link and link[0] == article_id:
-            return item, commenting_status(source, article_id, raw.decode('utf-8', 'replace'))
-    except (OSError, ValueError):
+            return commenting_status(source, article_id, raw.decode('utf-8', 'replace')), False
+    except HTTPError as error:
+        return None, error.code in (408, 500, 502, 503, 504) and not error.headers.get('Retry-After')
+    except (OSError, HTTPException):
+        return None, True
+    except ValueError:
         pass
-    return item, None
+    return None, False
 

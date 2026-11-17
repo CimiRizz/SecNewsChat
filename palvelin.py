@@ -13,7 +13,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from luetuimmat import CLOSED, PUBLISHER_LISTS, check_ranked
+from luetuimmat import CLOSED, PUBLISHER_LISTS, check_ranked, retry_failed
 
 ROOT = Path(__file__).resolve().parent
 DATABASE = Path(os.environ.get('DATABASE_PATH', ROOT / 'keskustelu.sqlite3'))
@@ -75,14 +75,14 @@ def article_values(item, status):
     return source, publisher_id, url, title[:500], stamp, status
 
 
-def refresh_source(source):
-    results = check_ranked(source)
-    if not any(status for _, _, status in results):
-        raise ValueError('Kommentointitiloja ei saatu tarkistettua')
-    partial = any(status is None for _, _, status in results)
+def save_rankings(source, results):
+    if not any(result.status is not None for result in results):
+        record_ranking_error(source, 'Kommentointitiloja ei saatu tarkistettua')
+        return
+    partial = any(result.status is None for result in results)
     with database() as db:
         db.execute('DELETE FROM rankings WHERE article_id IN (SELECT id FROM articles WHERE source=?)', (source,))
-        for rank, item, status in results:
+        for rank, item, status, _ in results:
             if status is None:
                 continue
             if status in CLOSED:
@@ -100,17 +100,36 @@ def refresh_source(source):
                    (source, int(time.time()), 'partial' if partial else 'ok'))
 
 
+def record_ranking_error(source, reason):
+    print(f'{source}: Luetuimmat-haku epäonnistui ({reason})', flush=True)
+    with database() as db:
+        db.execute("""INSERT INTO ranking_updates VALUES (?,NULL,'error')
+                      ON CONFLICT(source) DO UPDATE SET status='error'""", (source,))
+
+
+def collect_rankings():
+    # Publish both sources before making any retry requests.
+    first_pass = {}
+    for source in PUBLISHER_LISTS:
+        try:
+            results = check_ranked(source)
+            save_rankings(source, results)
+            first_pass[source] = results
+        except Exception as error:
+            record_ranking_error(source, type(error).__name__)
+    for source, results in first_pass.items():
+        try:
+            updated = retry_failed(results)
+            if updated is not None:
+                save_rankings(source, updated)
+        except Exception as error:
+            print(f'{source}: Uusintahaku epäonnistui ({type(error).__name__})', flush=True)
+
+
 def collector():
     while True:
         start = time.monotonic()
-        for source in PUBLISHER_LISTS:
-            try:
-                refresh_source(source)
-            except Exception as error:
-                print(f'{source}: Luetuimmat-haku epäonnistui ({type(error).__name__})', flush=True)
-                with database() as db:
-                    db.execute("""INSERT INTO ranking_updates VALUES (?,NULL,'error')
-                                  ON CONFLICT(source) DO UPDATE SET status='error'""", (source,))
+        collect_rankings()
         time.sleep(max(0, REFRESH_SECONDS - (time.monotonic() - start)))
 
 
