@@ -46,9 +46,10 @@ button:disabled{opacity:.6;cursor:wait}
 #article{margin-bottom:24px}
 #article .meta{margin:0 0 6px}
 #article h1{font-size:clamp(1.65rem,4vw,2.55rem);margin:0;overflow-wrap:anywhere}
-#thread :is(.back,.article-original){display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 13px;border:1px solid #cbd6cb;border-radius:8px;background:#fff;color:#146457;font-size:.85rem;font-weight:650;text-align:center;text-decoration:none}
-#thread :is(.back,.article-original):hover{background:#e7f1ec;border-color:#146457}
-#thread :is(.back,.article-original):focus-visible{outline:2px solid #146457;outline-offset:3px}
+:is(#thread,#moderation) .back,
+#thread .article-original{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 13px;border:1px solid #cbd6cb;border-radius:8px;background:#fff;color:#146457;font-size:.85rem;font-weight:650;text-align:center;text-decoration:none}
+:is(#thread,#moderation) .back:hover,
+#thread .article-original:hover{background:#e7f1ec;border-color:#146457}
 form h2{margin:0 0 12px;font-size:1.15rem}
 label{display:grid;gap:4px;max-width:100%;margin-bottom:12px;font-weight:600}
 input,textarea{width:100%;color:inherit;background:#f7f8f4;border:1px solid #cbd6cb;border-radius:7px;padding:9px 11px}
@@ -65,17 +66,28 @@ footer.wrap{padding-top:28px;padding-bottom:25px;color:#4b6159;font-size:.85rem}
   color:#132724;
   border:1px solid #8da99e;
   border-radius:8px;
-  box-shadow:0 3px 0 #58766b, 0 5px 7px rgba(19,39,36,.14);
   padding:8px 13px;
   font-weight:650;
 }
-.forum-rules summary:active,
-.forum-rules .moderation-link:active{
+.forum-rules summary{margin-left:auto}
+
+.forum-rules :is(summary,.moderation-link),
+:is(#thread,#moderation) .back,
+#thread .article-original,
+#reply .primary{
+  box-shadow:0 3px 0 #58766b, 0 5px 7px rgba(19,39,36,.14);
+}
+.forum-rules :is(summary,.moderation-link):active,
+:is(#thread,#moderation) .back:active,
+#thread .article-original:active,
+#reply .primary:enabled:active{
   transform:translateY(2px);
   box-shadow:0 1px 0 #58766b;
 }
-.forum-rules summary:focus-visible,
-.forum-rules .moderation-link:focus-visible{outline:2px solid #146457;outline-offset:3px}
+.forum-rules :is(summary,.moderation-link):focus-visible,
+:is(#thread,#moderation) .back:focus-visible,
+#thread .article-original:focus-visible,
+#reply .primary:focus-visible{outline:2px solid #146457;outline-offset:3px}
 .forum-rules ol{list-style:decimal;padding-left:1.5rem;margin-top:12px}
 .forum-rules li{margin-bottom:6px}
 .forum-rules .moderation-link{display:block;margin:8px 0 0 auto;text-decoration:none}
