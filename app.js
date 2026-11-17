@@ -20,7 +20,8 @@ function loadBanner(banner) {
   const slot = banner.dataset.adSlot;
   const paths = [`/${folder}/mainokset/${slot}.webp`];
   if (folder === 'mobiili' && slot === 'top') {
-    paths.push('/mobiili/mainokset/after-5.webp', '/tietokone/mainokset/top.webp');
+    paths.unshift('/mobiili/mainokset/after-5.webp');
+    paths.push('/tietokone/mainokset/top.webp');
   }
   const image = element('img');
   image.alt = 'Mainos';
@@ -257,20 +258,11 @@ $('lock').addEventListener('submit',async event => {
   }
 });
 
-const topBanner = $('top-banner');
-const topImage = topBanner.querySelector('picture img');
-if (topImage) {
-  const recoverTopBanner = () => loadBanner(topBanner);
-  topImage.addEventListener('error', recoverTopBanner, {once:true});
-  if (topImage.complete && !topImage.naturalWidth) recoverTopBanner();
-} else {
-  loadBanner(topBanner);
+function loadVisibleBanners() {
+  document.querySelectorAll('[data-ad-slot]').forEach(loadBanner);
 }
-mobileBanner.addEventListener('change', () => {
-  document.querySelectorAll('[data-ad-slot]').forEach(banner => {
-    if (!banner.querySelector('picture')) loadBanner(banner);
-  });
-});
+loadVisibleBanners();
+mobileBanner.addEventListener('change', loadVisibleBanners);
 window.addEventListener('hashchange',route);
 route();
 setInterval(() => { if(!location.hash) route(); },30000);
