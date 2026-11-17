@@ -13,13 +13,14 @@ body{margin:0}
 .wrap{max-width:850px;margin:auto;padding:0 20px}
 .masthead{background:#132724;color:#fff}
 .masthead .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:66px}
-.masthead-tagline{min-width:0;text-align:right;font-size:.875rem;line-height:1.25;overflow-wrap:anywhere}
-.updated-mobile{display:none}
+.masthead-tagline{min-width:0;text-align:right;font-size:.875rem;font-weight:700;line-height:1.25;overflow-wrap:anywhere}
+.intro-mobile,.updated-mobile{display:none}
 @media(max-width:600px){
-  .masthead-tagline,.updated-desktop{display:none}
-  .updated-mobile{display:inline}
+  .masthead-tagline,.intro-desktop,.updated-desktop{display:none}
+  .intro-mobile{display:block}
+  .updated-mobile{display:block;font-size:clamp(.625rem,2.5vw,.75rem);white-space:nowrap;overflow-x:auto}
 }
-.brand{font-size:1.24rem;font-weight:800;letter-spacing:-.035em;color:inherit;text-decoration:none}
+.brand{font-size:clamp(1.65rem,4.5vw,2.15rem);font-weight:800;letter-spacing:-.035em;color:inherit;text-decoration:none}
 main.wrap{padding-top:34px;min-height:70vh}
 .intro{margin-bottom:24px}
 h1{font-size:clamp(2rem,6vw,3.1rem);letter-spacing:-.05em;line-height:1.08;margin:0 0 12px}
@@ -101,5 +102,6 @@ footer.wrap{padding-top:28px;padding-bottom:25px;color:#4b6159;font-size:.85rem}
 .top-ad{margin-top:16px}
 .ad-banner{display:grid;place-items:center;min-height:clamp(64px,12vw,100px);padding:12px;background:#eeefe8;border:1px dashed #aebcb0;border-radius:12px;color:#4b6159;font-size:.85rem;text-align:center}
 .ad-banner:has(img){padding:0;border:0;background:none}
+.ad-banner picture{display:block;width:100%;min-width:0}
 .ad-banner img{display:block;width:100%;height:auto;border-radius:12px}
 #threads .ad-row{display:block;padding:0;background:none;border:0}

@@ -14,12 +14,18 @@
     <span class="masthead-tagline">keskustele uutisista joita ei voi kommentoida</span>
   </div></header>
   <div class="wrap top-ad">
-    <aside id="top-banner" class="ad-banner" data-ad-slot="top" aria-label="Mainosbannerin paikka">Mainospaikka</aside>
+    <aside id="top-banner" class="ad-banner" data-ad-slot="top" aria-label="Mainosbannerin paikka">
+      <picture>
+        <source media="(max-width: 600px)" srcset="/mobiili/mainokset/top.webp">
+        <img src="/tietokone/mainokset/top.webp" alt="Mainos" fetchpriority="high">
+      </picture>
+    </aside>
   </div>
   <main class="wrap">
     <section id="forum">
       <div class="intro">
-        <p>Kommentaattorissa voit kommentoida Ilta-Sanomien ja Iltalehden luetuimpia uutisia, joita et voi kommentoida lehden sivulla.</p>
+        <p class="intro-desktop">Kommentaattorissa voit kommentoida Ilta-Sanomien ja Iltalehden luetuimpia uutisia, joita et voi kommentoida lehden sivulla.</p>
+        <p class="intro-mobile">Voit kommentoida IS ja IL uutisia joita ei voi kommentoida lehden sivulla.</p>
       </div>
       <div class="filter" role="group" aria-label="Uutislähde">
         <button type="button" data-source="IS" aria-pressed="true" aria-label="Ilta-Sanomat">

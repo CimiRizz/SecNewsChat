@@ -257,9 +257,19 @@ $('lock').addEventListener('submit',async event => {
   }
 });
 
-loadBanner($('top-banner'));
+const topBanner = $('top-banner');
+const topImage = topBanner.querySelector('picture img');
+if (topImage) {
+  const recoverTopBanner = () => loadBanner(topBanner);
+  topImage.addEventListener('error', recoverTopBanner, {once:true});
+  if (topImage.complete && !topImage.naturalWidth) recoverTopBanner();
+} else {
+  loadBanner(topBanner);
+}
 mobileBanner.addEventListener('change', () => {
-  document.querySelectorAll('[data-ad-slot]').forEach(loadBanner);
+  document.querySelectorAll('[data-ad-slot]').forEach(banner => {
+    if (!banner.querySelector('picture')) loadBanner(banner);
+  });
 });
 window.addEventListener('hashchange',route);
 route();
