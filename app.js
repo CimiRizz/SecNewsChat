@@ -24,14 +24,16 @@ function loadBanner(banner) {
     paths.push('/tietokone/mainokset/top.webp');
   }
   const image = element('img');
-  image.alt = 'Mainos';
+  image.alt = '';
   banner.textContent = 'Mainospaikka';
   image.addEventListener('error', () => {
     const fallback = paths.shift();
     if (fallback && mobileBanner.matches === (folder === 'mobiili')) image.src = fallback;
   });
   image.addEventListener('load', () => {
-    if (mobileBanner.matches === (folder === 'mobiili')) banner.replaceChildren(image);
+    if (mobileBanner.matches === (folder === 'mobiili')) {
+      banner.replaceChildren(image, element('span', 'mainos', 'ad-label'));
+    }
   }, {once:true});
   image.src = paths.shift();
 }
