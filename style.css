@@ -31,6 +31,9 @@ p{margin:0 0 12px}
 a{color:#146457}
 ul,ol{list-style:none;margin:0;padding:0}
 .filter{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+@media(max-width:600px){
+  .filter{margin-bottom:8px}
+}
 button,input,textarea{font:inherit}
 button{cursor:pointer;background:#fff;color:#132724;border:1px solid #cbd6cb;border-radius:8px;padding:8px 13px}
 button[aria-pressed=true],button.primary{background:#146457;border-color:#146457;color:white;font-weight:650}
@@ -110,8 +113,8 @@ footer.wrap{padding-top:28px;padding-bottom:25px;color:#4b6159;font-size:.85rem}
 .forum-rules .moderation-link{display:block;margin:8px 0 0 auto;text-decoration:none}
 
 .masthead + .wrap{margin-top:16px}
-.ad-banner{display:grid;place-items:center;min-height:clamp(64px,12vw,100px);padding:12px;background:#eeefe8;border:1px dashed #aebcb0;border-radius:12px;color:#4b6159;font-size:.85rem;text-align:center}
-.ad-banner:has(img){position:relative;padding:0;border:0;background:none}
+.ad-banner{position:relative;isolation:isolate;display:grid;place-items:center;min-height:clamp(64px,12vw,100px);padding:12px;background:#eeefe8;border:1px dashed #aebcb0;border-radius:12px;color:#4b6159;font-size:.85rem;text-align:center}
+.ad-banner:has(img){padding:0;border:0;background:none}
 .ad-banner img{display:block;width:100%;height:auto;border-radius:12px}
-.ad-label{position:absolute;right:6px;bottom:6px;padding:2px 5px;border-radius:4px;background:#132724;color:#fff;font-size:.625rem;line-height:1.2}
+.banner-caption{position:absolute;z-index:1;right:6px;bottom:6px;padding:2px 5px;border-radius:4px;background:#132724;color:#fff;font-size:.6875rem;font-weight:650;line-height:1.2}
 #threads .ad-row{display:block;padding:0;background:none;border:0}

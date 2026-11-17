@@ -32,7 +32,7 @@ function loadBanner(banner) {
   });
   image.addEventListener('load', () => {
     if (mobileBanner.matches === (folder === 'mobiili')) {
-      banner.replaceChildren(image, element('span', 'mainos', 'ad-label'));
+      banner.replaceChildren(image, element('span', 'mainos', 'banner-caption'));
     }
   }, {once:true});
   image.src = paths.shift();
