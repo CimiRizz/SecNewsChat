@@ -14,6 +14,11 @@ body{margin:0}
 .masthead{background:#132724;color:#fff}
 .masthead .wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:66px}
 .masthead-tagline{min-width:0;text-align:right;font-size:.875rem;line-height:1.25;overflow-wrap:anywhere}
+.updated-mobile{display:none}
+@media(max-width:600px){
+  .masthead-tagline,.updated-desktop{display:none}
+  .updated-mobile{display:inline}
+}
 .brand{font-size:1.24rem;font-weight:800;letter-spacing:-.035em;color:inherit;text-decoration:none}
 main.wrap{padding-top:34px;min-height:70vh}
 .intro{margin-bottom:24px}

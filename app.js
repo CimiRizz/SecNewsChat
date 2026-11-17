@@ -17,13 +17,22 @@ const mobileBanner = window.matchMedia('(max-width: 600px)');
 
 function loadBanner(banner) {
   const folder = mobileBanner.matches ? 'mobiili' : 'tietokone';
+  const slot = banner.dataset.adSlot;
+  const paths = [`/${folder}/mainokset/${slot}.webp`];
+  if (folder === 'mobiili' && slot === 'top') {
+    paths.push('/mobiili/mainokset/after-5.webp', '/tietokone/mainokset/top.webp');
+  }
   const image = element('img');
   image.alt = 'Mainos';
   banner.textContent = 'Mainospaikka';
+  image.addEventListener('error', () => {
+    const fallback = paths.shift();
+    if (fallback && mobileBanner.matches === (folder === 'mobiili')) image.src = fallback;
+  });
   image.addEventListener('load', () => {
     if (mobileBanner.matches === (folder === 'mobiili')) banner.replaceChildren(image);
   }, {once:true});
-  image.src = '/' + folder + '/mainokset/' + banner.dataset.adSlot + '.webp';
+  image.src = paths.shift();
 }
 
 async function api(path, data, token) {
@@ -44,6 +53,28 @@ function meta(item) {
   return element('p', sourceNames[item.source]+' · '+formatDate.format(item.published*1000), 'meta');
 }
 
+function formatUpdates(sources, compact) {
+  const stamp = info => info?.checked ? formatDate.format(info.checked * 1000) : '';
+  const displayTime = time => compact ? time.replace(/(\d)\.(\d{2})$/, '$1:$2') : time;
+  const partial = ' (osa jutuista jäi varmistamatta)';
+  const sharedTime = stamp(sources.IS);
+  if (compact && sharedTime && sharedTime === stamp(sources.IL) &&
+      sources.IS.status !== 'error' && sources.IL.status !== 'error') {
+    const partialSources = ['IS', 'IL'].filter(key => sources[key].status === 'partial');
+    const note = partialSources.length === 1 ? ' (' + partialSources[0] + ': osa jutuista jäi varmistamatta)'
+      : partialSources.length === 2 ? partial : '';
+    return 'IS | IL ' + displayTime(sharedTime) + note;
+  }
+  return Object.entries(sourceNames).map(([key, name]) => {
+    const label = compact ? key : name;
+    const info = sources[key];
+    if (!info) return label + ' · tarkistus käynnissä';
+    const last = displayTime(stamp(info));
+    if (info.status === 'error') return label + ' · haku epäonnistui' + (last ? ', edellinen lista ' + last : '');
+    return label + ' · ' + last + (info.status === 'partial' ? partial : '');
+  }).join(' | ');
+}
+
 async function listThreads(sequence) {
   const {threads, sources} = await api('/api/threads');
   if(sequence !== routeSequence) return;
@@ -54,13 +85,10 @@ async function listThreads(sequence) {
   $('status').textContent = Object.keys(sources).length
     ? 'Tässä näkymässä ei ole vahvistettuja uutisia.'
     : 'Tarkistetaan lehtien listoja…';
-  $('updated').textContent = Object.entries(sourceNames).map(([key,name]) => {
-    const info = sources[key];
-    if(!info) return name+' · tarkistus käynnissä';
-    const last = info.checked ? formatDate.format(info.checked*1000) : '';
-    if(info.status === 'error') return name+' · haku epäonnistui'+(last ? ', edellinen lista '+last : '');
-    return name+' · '+last+(info.status === 'partial' ? ' (osa jutuista jäi varmistamatta)' : '');
-  }).join(' | ');
+  $('updated').replaceChildren(
+    element('span', formatUpdates(sources, false), 'updated-desktop'),
+    element('span', formatUpdates(sources, true), 'updated-mobile')
+  );
   for(const [index, item] of visible.entries()) {
     const li = element('li');
     li.value = item.position;
